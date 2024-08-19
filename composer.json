@@ -7,9 +7,9 @@
         "workerman/workerman": ">=3.5",
         "topthink/think-orm": "2.0.x@dev",
         "ext-json": "*",
-        "workerman/crontab": "dev-main",
+        "workerman/crontab": "1.0.6",
         "ext-curl": "*",
-        "guzzlehttp/guzzle": "8.0.x-dev",
+        "guzzlehttp/guzzle": "8.0.x@dev",
         "vlucas/phpdotenv": "^5.6@dev"
     },
     "license": "Apache-2.0",
