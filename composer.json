@@ -5,7 +5,7 @@
     "require": {
         "php": ">=7.0",
         "workerman/workerman": ">=3.5",
-        "topthink/think-orm": "2.0.x-dev",
+        "topthink/think-orm": "2.0.x@dev",
         "ext-json": "*",
         "workerman/crontab": "dev-main",
         "ext-curl": "*",
