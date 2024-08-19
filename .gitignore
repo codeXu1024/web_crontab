@@ -1,0 +1,8 @@
+vendor/
+.idea/
+tests/
+composer.lock
+log/
+config/
+console/
+start.bat
