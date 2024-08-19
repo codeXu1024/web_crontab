@@ -1,7 +1,7 @@
 
 <?php
 
-    $baseDir = dirname(dirname(__DIR__));
+    $baseDir = dirname(dirname($GLOBALS['_composer_bin_dir']));
     $configPath = $baseDir.DIRECTORY_SEPARATOR."config".DIRECTORY_SEPARATOR."web_crontab.php";
     $consolePath = $baseDir.DIRECTORY_SEPARATOR."console".DIRECTORY_SEPARATOR;
     #查询配置文件是否存在
