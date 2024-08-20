@@ -1,7 +1,6 @@
 
 <?php
-    use function consoleOutputOK;
-
+    require_once dirname(dirname(__DIR__)).'/Lib/functions.php';
 
     $baseDir = dirname(dirname($GLOBALS['_composer_bin_dir']));
     $configPath = $baseDir.DIRECTORY_SEPARATOR."config".DIRECTORY_SEPARATOR."web_crontab.php";
@@ -11,22 +10,26 @@
         @mkdir($baseDir.DIRECTORY_SEPARATOR."config",0775);
         file_put_contents($configPath, createWebCrontabConfig());
     }
-
-    if(!file_exists($consolePath."boot_http.php")){
+    #http server启动文件
+    $bootHttp = $consolePath."boot_http.php";
+    if(!file_exists($bootHttp)){
         @mkdir($consolePath,0775);
-        file_put_contents($consolePath."boot_http.php",createBootHttp());
+        file_put_contents($bootHttp,createBootHttp());
     }
-
-    if(!file_exists($consolePath."boot_worker.php")){
-        file_put_contents($consolePath."boot_worker.php",createBootWorker());
+    #工作server启动文件
+    $boot_worker = $consolePath."boot_worker.php";
+    if(!file_exists($boot_worker)){
+        file_put_contents($boot_worker,createBootWorker());
     }
-
-    if(!file_exists($baseDir."web_crontab.php")){
-        file_put_contents($baseDir."web_crontab.php",createBootFile());
+    #linux 启动文件
+    $web_crontab = $baseDir.DIRECTORY_SEPARATOR."web_crontab.php";
+    if(!file_exists($web_crontab)){
+        file_put_contents($web_crontab,createBootFile());
     }
-
-    if(!file_exists($baseDir."windows_web_crontab.bat")){
-        file_put_contents($baseDir."windows_web_crontab.bat",createBootWindowsFile());
+    #windows bat文件
+    $windows_bat = $baseDir.DIRECTORY_SEPARATOR."windows_web_crontab.bat";
+    if(!file_exists($windows_bat)){
+        file_put_contents($windows_bat,createBootWindowsFile());
     }
 
     consoleOutputOK("--------------初始化成功-----------------");
@@ -125,7 +128,7 @@ Cfg;
 
     function createBootWindowsFile(){
         return <<<Cfg
-php console/boot_http.php  console/boot_http.php
+php console/boot_http.php  console/boot_worker.php
 pause
 Cfg;
     }

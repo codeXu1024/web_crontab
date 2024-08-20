@@ -14,7 +14,7 @@ class WebCrontabApi
     public static  function init(){
 
         if(!self::$config){
-            self::$config = $config = require_once  __DIR__ . '/../../../../config/web_crontab.php';
+            self::$config = $config = require_once '../../../../../config/web_crontab.php';
             $db = [
                 'default'     => 'mysql',
                 'connections' => [
