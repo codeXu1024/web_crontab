@@ -5,13 +5,26 @@ namespace Codexu1024\WebCrontab\Api;
 use Codexu1024\WebCrontab\Exception\WebCrontabException;
 use Codexu1024\WebCrontab\Orm\Enum\Task;
 use Codexu1024\WebCrontab\Orm\WebCrontabTask;
+use think\facade\Db;
 
 class WebCrontabApi
 {
-    private $httpListenAddress = '';
-    public  function __construct(){
-        var_dump(WEB_CRONTAB_ROOT_PATH);die;
-        $this->httpListenAddress = $httpListenAddress;
+    private static $config = [];
+
+    public static  function init(){
+
+        if(!self::$config){
+            $file = __DIR__ . '/../../../../../config/web_crontab.php';
+            self::$config = $config = require_once $file;
+            $db = [
+                'default'     => 'mysql',
+                'connections' => [
+                    'mysql' =>$config['mysql']
+                ]
+            ];
+            Db::setConfig($db);
+        }
+        return new self();
     }
 
 
@@ -82,7 +95,7 @@ class WebCrontabApi
     }
 
     public  function  request($data){
-        $url = $this->httpListenAddress;
+        $url = 'http://'.self::$config['http_addr'];
         if(is_array($data)){
             $data = http_build_query($data);
         }
