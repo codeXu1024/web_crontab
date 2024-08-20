@@ -1,5 +1,7 @@
 
 <?php
+    use function consoleOutputOK;
+
 
     $baseDir = dirname(dirname($GLOBALS['_composer_bin_dir']));
     $configPath = $baseDir.DIRECTORY_SEPARATOR."config".DIRECTORY_SEPARATOR."web_crontab.php";
@@ -10,15 +12,24 @@
         file_put_contents($configPath, createWebCrontabConfig());
     }
 
-    if(!file_exists($consolePath."http.php")){
+    if(!file_exists($consolePath."boot_http.php")){
         @mkdir($consolePath,0775);
-        file_put_contents($consolePath."http.php",createBootHttp());
+        file_put_contents($consolePath."boot_http.php",createBootHttp());
     }
 
-    if(!file_exists($consolePath."worker.php")){
-        file_put_contents($consolePath."worker.php",createBootWorker());
+    if(!file_exists($consolePath."boot_worker.php")){
+        file_put_contents($consolePath."boot_worker.php",createBootWorker());
     }
 
+    if(!file_exists($baseDir."web_crontab.php")){
+        file_put_contents($baseDir."web_crontab.php",createBootFile());
+    }
+
+    if(!file_exists($baseDir."windows_web_crontab.bat")){
+        file_put_contents($baseDir."windows_web_crontab.bat",createBootWindowsFile());
+    }
+
+    consoleOutputOK("--------------初始化成功-----------------");
     function createWebCrontabConfig(){
         return <<<Cfg
 <?php
@@ -70,4 +81,51 @@ Cfg;
     $data = require_once  "config/web_crontab.php";
     (new WorkerServer($data["worker_addr"]))->setReusePort()->setDbConfig($data["mysql"])->setCount($data["worker_count"]?:5)->run();
     ';
+    }
+
+    function createBootFile(){
+        return '<?php
+    /**
+     * run with command
+     * php start.php start
+     */
+    ini_set("display_errors", "on");
+    use Workerman\Worker;
+    
+    if(strpos(strtolower(PHP_OS), "win") === 0)
+    {
+        exit("start.php not support windows, please use start_for_win.bat\n");
+    }
+    
+    // 检查扩展
+    if(!extension_loaded("pcntl"))
+    {
+        exit("Please install pcntl extension. See http://doc3.workerman.net/appendices/install-extension.html\n");
+    }
+    
+    if(!extension_loaded("posix"))
+    {
+        exit("Please install posix extension. See http://doc3.workerman.net/appendices/install-extension.html\n");
+    }
+    
+    // 标记是全局启动
+    define("GLOBAL_START", 1);
+    
+    require_once __DIR__ . "/vendor/autoload.php";
+    
+    // 加载所有Applications/*/start.php，以便启动所有服务
+    foreach(glob(__DIR__."/console/boot*.php") as $start_file)
+    {
+        require_once $start_file;
+    }
+    // 运行所有服务
+    Worker::runAll();
+        ';
+    }
+
+    function createBootWindowsFile(){
+        return <<<Cfg
+php console/boot_http.php  console/boot_http.php
+pause
+Cfg;
     }

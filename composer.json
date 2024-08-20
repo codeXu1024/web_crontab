@@ -9,7 +9,7 @@
         "ext-json": "*",
         "workerman/crontab": "1.0.6",
         "ext-curl": "*",
-        "guzzlehttp/guzzle": "6.5.8"
+        "guzzlehttp/guzzle": "7.5.3"
     },
     "license": "Apache-2.0",
     "suggest": {
